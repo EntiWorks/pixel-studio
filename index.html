@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixel Studio — a minimal pixel art editor</title>
+  <meta name="description" content="A minimal, dependency-free pixel art editor built with vanilla JavaScript and the Canvas API." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============ Header ============ -->
+  <header class="app-header">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 16 16" aria-hidden="true">
+        <rect x="1"  y="1"  width="4" height="4"/>
+        <rect x="6"  y="6"  width="4" height="4"/>
+        <rect x="11" y="1"  width="4" height="4"/>
+        <rect x="1"  y="11" width="4" height="4"/>
+        <rect x="11" y="11" width="4" height="4"/>
+      </svg>
+      <span class="brand-name">Pixel<span class="brand-name-accent">Studio</span></span>
+    </div>
+
+    <div class="header-actions">
+      <div class="btn-group" role="group" aria-label="History">
+        <button class="icon-btn" id="undo" title="Undo (Ctrl+Z)" aria-label="Undo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7 4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-3"/></svg>
+        </button>
+        <button class="icon-btn" id="redo" title="Redo (Ctrl+Shift+Z)" aria-label="Redo">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7l5 5-5 5"/><path d="M20 12H9a5 5 0 0 0 0 10h3"/></svg>
+        </button>
+      </div>
+
+      <button class="text-btn" id="toggle-grid" title="Toggle grid lines" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+        <span>Grid</span>
+      </button>
+
+      <div class="btn-group zoom" role="group" aria-label="Zoom">
+        <button class="icon-btn" id="zoom-out" title="Zoom out" aria-label="Zoom out">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>
+        </button>
+        <span class="zoom-readout" id="zoom-readout">16px</span>
+        <button class="icon-btn" id="zoom-in" title="Zoom in" aria-label="Zoom in">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <button class="text-btn primary" id="export" title="Export as PNG">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span>Export PNG</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ Body ============ -->
+  <main class="app-body">
+    <!-- ---- Left: tools ---- -->
+    <aside class="panel tools" aria-label="Tools">
+      <div class="panel-label">Tools</div>
+      <div class="tool-grid">
+        <button class="tool-btn is-active" data-tool="pencil" title="Pencil (B)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg>
+        </button>
+        <button class="tool-btn" data-tool="eraser" title="Eraser (E)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15 13 6a2 2 0 0 1 3 0l3 3a2 2 0 0 1 0 3l-7 7H8Z"/><path d="M5 20h14"/></svg>
+        </button>
+        <button class="tool-btn" data-tool="fill" title="Fill (G)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11 11 5l7 7-6 6a2 2 0 0 1-3 0l-4-4a2 2 0 0 1 0-3Z"/><path d="m11 5-2-2"/><path d="M20 16s1.5 2 1.5 3a1.5 1.5 0 0 1-3 0c0-1 1.5-3 1.5-3Z"/></svg>
+        </button>
+        <button class="tool-btn" data-tool="eyedropper" title="Eyedropper (I)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 7 4 4"/><path d="m6 21 .5-3L15 9.5a2.1 2.1 0 0 1 0-3l.5-.5a2.1 2.1 0 0 1 3 3l-.5.5L9.5 18 6.5 18.5 6 21Z"/></svg>
+        </button>
+      </div>
+
+      <div class="panel-label">Shapes</div>
+      <div class="tool-grid">
+        <button class="tool-btn shape-btn" data-tool="shape" data-shape="rectangle" title="Rectangle">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12"/></svg>
+        </button>
+        <button class="tool-btn shape-btn" data-tool="shape" data-shape="square" title="Square">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14"/></svg>
+        </button>
+        <button class="tool-btn shape-btn" data-tool="shape" data-shape="circle" title="Circle">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>
+        </button>
+        <button class="tool-btn shape-btn" data-tool="shape" data-shape="triangle" title="Triangle">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,4 18.93,16 5.07,16"/></svg>
+        </button>
+        <button class="tool-btn shape-btn" data-tool="shape" data-shape="pentagon" title="Pentagon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,4 19.61,9.53 16.70,18.47 7.30,18.47 4.39,9.53"/></svg>
+        </button>
+        <button class="tool-btn shape-btn" data-tool="shape" data-shape="hexagon" title="Hexagon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,4 18.93,8 18.93,16 12,20 5.07,16 5.07,8"/></svg>
+        </button>
+        <button class="tool-btn shape-btn" data-tool="shape" data-shape="heptagon" title="Heptagon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,4 18.26,7.01 19.80,13.78 15.47,19.21 8.53,19.21 4.20,13.78 5.74,7.01"/></svg>
+        </button>
+        <button class="tool-btn shape-btn" data-tool="shape" data-shape="octagon" title="Octagon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,4 17.66,6.34 20,12 17.66,17.66 12,20 6.34,17.66 4,12 6.34,6.34"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ---- Center: canvas ---- -->
+    <section class="canvas-stage">
+      <div class="canvas-mat">
+        <canvas id="board" width="512" height="512"></canvas>
+      </div>
+    </section>
+
+    <!-- ---- Right: color & document ---- -->
+    <aside class="panel inspector" aria-label="Color and canvas settings">
+      <div class="panel-label">Color</div>
+      <div class="color-row">
+        <label class="color-well" title="Pick a color">
+          <input type="color" id="color-input" value="#211f1a" />
+        </label>
+        <output class="color-hex" id="color-hex">#211F1A</output>
+      </div>
+
+      <div class="panel-label">Palette</div>
+      <div class="swatches" id="palette"></div>
+
+      <div class="panel-label">Recent</div>
+      <div class="swatches recent" id="recent"></div>
+
+      <div class="panel-label">Canvas</div>
+      <div class="size-group" role="group" aria-label="Canvas size">
+        <button class="size-btn" data-size="16">16</button>
+        <button class="size-btn is-active" data-size="32">32</button>
+        <button class="size-btn" data-size="64">64</button>
+      </div>
+
+      <button class="text-btn danger full" id="clear" title="Clear the canvas">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M7 7v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7"/></svg>
+        <span>Clear</span>
+      </button>
+    </aside>
+  </main>
+
+  <!-- ============ Status bar ============ -->
+  <footer class="status-bar">
+    <span id="status-tool">Pencil</span>
+    <span class="status-sep">/</span>
+    <span id="status-size">32 × 32</span>
+    <span class="status-sep">/</span>
+    <span id="status-pos">—</span>
+    <span class="status-spacer"></span>
+    <span class="status-hint">Drag to draw · Shapes drag from corner</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

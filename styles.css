@@ -1,0 +1,293 @@
+/* ============================================================
+   Pixel Studio — styles
+   A precision-tool aesthetic: warm paper, ink, one clay accent.
+   System fonts only, so the app is fully self-contained/offline.
+   ============================================================ */
+
+:root {
+  /* Surfaces */
+  --paper:      #EAE6DD;
+  --mat:        #DCD7CB;
+  --panel:      #F6F3EC;
+  --panel-2:    #EEEAE0;
+
+  /* Ink */
+  --ink:        #211F1A;
+  --ink-soft:   #76705F;
+  --ink-faint:  #A8A294;
+
+  /* Lines + accent */
+  --line:       #D3CCBC;
+  --line-soft:  #E0DACC;
+  --accent:     #BE5A38;
+  --accent-ink: #FFFFFF;
+  --accent-wash:#F0DACF;
+
+  --radius:     5px;
+  --radius-sm:  4px;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --shadow: 0 1px 2px rgba(33,31,26,.06), 0 8px 28px rgba(33,31,26,.08);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  /* faint dotted texture as a nod to pixels */
+  background-image: radial-gradient(var(--line-soft) 1px, transparent 1px);
+  background-size: 22px 22px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---------------- Header ---------------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark { width: 20px; height: 20px; fill: var(--accent); }
+.brand-name {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: .04em;
+  text-transform: lowercase;
+}
+.brand-name-accent { color: var(--ink-soft); }
+
+.header-actions { display: flex; align-items: center; gap: 10px; }
+
+/* ---------------- Buttons ---------------- */
+.icon-btn, .text-btn, .tool-btn, .size-btn {
+  font-family: var(--mono);
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: background .12s ease, border-color .12s ease, color .12s ease, transform .04s ease;
+}
+.icon-btn:active, .text-btn:active, .tool-btn:active, .size-btn:active { transform: translateY(1px); }
+
+.icon-btn { width: 34px; height: 34px; padding: 0; }
+.text-btn {
+  height: 34px; padding: 0 12px;
+  font-size: 12px; letter-spacing: .03em; text-transform: uppercase;
+}
+.text-btn.full { width: 100%; margin-top: 4px; }
+
+.icon-btn:hover, .text-btn:hover, .tool-btn:hover, .size-btn:hover {
+  background: var(--panel-2);
+  border-color: var(--ink-faint);
+}
+
+.text-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.text-btn.primary:hover { background: #aa4e30; border-color: #aa4e30; }
+.text-btn.primary svg { stroke: var(--accent-ink); }
+
+.text-btn.danger:hover { color: var(--accent); border-color: var(--accent); }
+
+.text-btn[aria-pressed="true"] {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.text-btn[aria-pressed="true"] svg { stroke: var(--accent); }
+
+/* Inline SVG icon defaults (line icons) */
+.icon-btn svg, .text-btn svg, .tool-btn svg {
+  width: 20px; height: 20px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+}
+.text-btn svg { width: 16px; height: 16px; }
+.shape-btn svg { fill: none; }
+
+.btn-group { display: inline-flex; gap: 4px; }
+
+.zoom {
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  gap: 2px;
+}
+.zoom .icon-btn { width: 28px; height: 28px; border: none; background: transparent; }
+.zoom .icon-btn:hover { background: var(--panel-2); }
+.zoom-readout {
+  font-family: var(--mono); font-size: 12px;
+  min-width: 42px; text-align: center; color: var(--ink-soft);
+}
+
+/* ---------------- Body layout ---------------- */
+.app-body {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  min-height: 0;
+}
+
+.panel {
+  background: var(--panel);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+.tools { border-right: 1px solid var(--line); width: 124px; }
+.inspector { border-left: 1px solid var(--line); width: 208px; }
+
+.panel-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 6px;
+}
+.panel-label:first-child { margin-top: 0; }
+
+/* ---------------- Tools ---------------- */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+.tool-btn { aspect-ratio: 1; }
+.tool-btn.is-active {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---------------- Canvas stage ---------------- */
+.canvas-stage {
+  background: var(--mat);
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  overflow: auto;
+  padding: 28px;
+}
+.canvas-mat {
+  background: var(--panel);
+  padding: 14px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  line-height: 0;
+}
+#board {
+  /* transparency reads as a checkerboard */
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, #e9e4d8 25%, transparent 25%, transparent 75%, #e9e4d8 75%),
+    linear-gradient(45deg, #e9e4d8 25%, transparent 25%, transparent 75%, #e9e4d8 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+  image-rendering: pixelated;
+  cursor: crosshair;
+  touch-action: none;
+  display: block;
+}
+
+/* ---------------- Color + swatches ---------------- */
+.color-row { display: flex; align-items: center; gap: 10px; }
+.color-well {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  flex: none;
+}
+.color-well input[type="color"] {
+  position: absolute; inset: -4px;
+  width: calc(100% + 8px); height: calc(100% + 8px);
+  border: none; padding: 0; cursor: pointer; background: none;
+}
+.color-hex {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .04em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+}
+.swatches.recent { grid-template-columns: repeat(8, 1fr); min-height: 20px; }
+.swatch {
+  aspect-ratio: 1;
+  border-radius: 3px;
+  border: 1px solid rgba(33,31,26,.14);
+  cursor: pointer;
+  padding: 0;
+  transition: transform .05s ease;
+}
+.swatch:hover { transform: scale(1.12); }
+.swatch.is-active { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* ---------------- Size group ---------------- */
+.size-group { display: flex; gap: 6px; }
+.size-btn {
+  flex: 1; height: 32px;
+  font-size: 12px; letter-spacing: .03em;
+}
+.size-btn.is-active {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---------------- Status bar ---------------- */
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.status-sep { color: var(--ink-faint); }
+.status-spacer { flex: 1; }
+.status-hint { color: var(--ink-faint); }
+
+/* ---------------- Small screens ---------------- */
+@media (max-width: 720px) {
+  .status-hint { display: none; }
+  .tools { width: 96px; }
+  .inspector { width: 168px; }
+}
