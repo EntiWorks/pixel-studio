@@ -2,7 +2,8 @@
 
 A minimal, dependency-free pixel art editor built with vanilla JavaScript and the HTML5 Canvas API. No frameworks, no build step, no `node_modules` — open `index.html` and draw.
 
-![Pixel Studio screenshot](docs/screenshot.png)
+![Pixel Studio screenshot](<img width="2544" height="1175" alt="image" src="https://github.com/user-attachments/assets/19da9551-3692-49a3-9a3f-e24f12e6a420" />
+)
 
 ## Features
 
